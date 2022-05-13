@@ -2,13 +2,17 @@ import styled from "styled-components";
 import WeatherDisplay from "../Weather/WeatherDisplay";
 import WeatherChart from "../Weather/WeatherChart";
 import LocationInput from "../Location/LocationInput";
+import WeatherNextDays from "../Weather/WeatherNextDays";
 
 const WeatherContainer = () => {
   return (
     <Wrapper>
       <LocationInput />
       <WeatherDisplay />
-      <WeatherChart />
+      <Informations>
+        <WeatherChart />
+        <WeatherNextDays />
+      </Informations>
     </Wrapper>
   );
 };
@@ -24,6 +28,10 @@ const Wrapper = styled.div`
   border-radius: 10px;
   display: flex;
   position: relative;
+`;
+
+const Informations = styled.div`
+  width: 50%;
 `;
 
 export default WeatherContainer;

@@ -19,9 +19,7 @@ const GlobalStyles = createGlobalStyle`
         background:  linear-gradient(to right top, #65dfc9, #6cdbeb);;
     }
 
-    svg{
-        margin-right: 1rem;
-    }
+   
 `;
 
 export default GlobalStyles;

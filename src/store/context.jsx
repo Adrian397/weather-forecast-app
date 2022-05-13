@@ -5,22 +5,20 @@ const Context = createContext({
   weather: {},
   place: {},
   location: "",
-  setLocation: () => {},
+  submitLocation: () => {},
 });
 
 export const ContextProvider = ({ children }) => {
   const [weather, setWeather] = useState({});
   const [place, setPlace] = useState({});
-  // const [location, setLocation] = useState("");
-  const location = useRef("Warsaw");
+  const [location, setLocation] = useState("Warsaw");
+  const inputLocation = useRef("");
 
   useEffect(() => {
-    location.current.value = "Warsaw";
-
     const getWeatherData = async () => {
       try {
         const request = await axios.get(
-          `http://api.weatherstack.com/current?access_key=&query=${location.current.value}`
+          `http://api.weatherstack.com/current?access_key=21b2fa9daa08b5e8059691abb139c1db&query=${location}`
         );
 
         const currentWeather = request.data.current;
@@ -34,21 +32,22 @@ export const ContextProvider = ({ children }) => {
     };
 
     getWeatherData();
-  }, []);
+  }, [location]);
 
-  console.log(weather);
-  console.log(place);
-  console.log(location.current.value);
+  // console.log(weather);
+  // console.log(place);
+  console.log(location);
 
-  const setLocation = (e) => {
-    return location.current.value;
+  const submitLocation = (e) => {
+    e.preventDefault();
+    setLocation(inputLocation.current.value);
   };
 
   const context = {
     weather,
     place,
-    location,
-    setLocation,
+    inputLocation,
+    submitLocation,
   };
   return <Context.Provider value={context}>{children}</Context.Provider>;
 };

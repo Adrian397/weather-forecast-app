@@ -84,5 +84,9 @@ const AdditionalInfo = styled.div`
     display: flex;
     align-items: center;
   }
+
+  svg {
+    margin-right: 1rem;
+  }
 `;
 export default WeatherDisplay;

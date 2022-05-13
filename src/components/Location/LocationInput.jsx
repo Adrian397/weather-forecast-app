@@ -1,20 +1,35 @@
 import { useContext } from "react";
 import Context from "../../store/context";
 import styled from "styled-components";
-import IconSearch from "../icons/icon-search";
 
 const LocationInput = () => {
   const current = useContext(Context);
 
   return (
     <Container>
-      <input type="text" placeholder="Location..." ref={current.location} />
-      <form>
-        <IconSearch />
+      <input
+        type="text"
+        placeholder="Location..."
+        ref={current.inputLocation}
+      />
+      <form onSubmit={current.submitLocation}>
+        <button>
+          <Search></Search>
+        </button>
       </form>
     </Container>
   );
 };
+
+const Search = styled.span`
+  height: 2rem;
+  width: 3rem;
+  display: block;
+  border-radius: 0 10px 10px 0;
+  background-image: url("./search.svg");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+`;
 
 const Container = styled.div`
   width: max-content;
@@ -25,6 +40,19 @@ const Container = styled.div`
   top: 4%;
   margin-left: auto;
   margin-right: auto;
+
+  button {
+    position: absolute;
+    right: 0%;
+    top: 3%;
+    border-radius: 0 10px 10px 0;
+    border: none;
+    outline: none;
+    height: 2rem;
+    width: 3rem;
+    cursor: pointer;
+    background-color: transparent;
+  }
 
   input {
     width: 13rem;
