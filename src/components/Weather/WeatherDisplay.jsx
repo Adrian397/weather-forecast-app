@@ -9,37 +9,30 @@ import Context from "../../store/context";
 const WeatherDisplay = () => {
   const current = useContext(Context);
 
-  let currentDay;
-  // let currentTime;
-
-  currentDay = new Date(current.place.localtime).toLocaleString("en-us", {
-    weekday: "long",
-  });
-
-  // currentTime = current.place.localtime.slice(10);
-
   return (
     <Wrapper>
       <div>
         <PrimaryInfo>
-          <h1>{current.place.name},</h1>
-          <h2>{current.weather.temperature}°</h2>
-          <p>{currentDay},</p>
+          <h1>{current.place},</h1>
+          <h2>{Math.trunc(current.weather.temp)}°</h2>
+          <p>
+            {current.transformedDay}, {current.transformedTime}
+          </p>
         </PrimaryInfo>
         <AdditionalInfo>
           <p>
-            <IconWind /> Wind Speed: {current.weather.wind_speed}
+            <IconWind /> Wind Speed: {current.windSpeed} km/h
           </p>
           <p>
-            <IconWindDirection /> Wind Direction: {current.weather.wind_dir}
+            <IconWindDirection /> Wind Direction: {current.windDirection}
           </p>
           <p>
             <IconAtmospherePressure />
-            Atmospheric pressure: {current.weather.pressure}
+            Atmospheric pressure: {current.weather.pressure} hPa
           </p>
           <p>
             <IconHumidity />
-            Humidity: {current.weather.humidity}
+            Humidity: {current.weather.humidity} %
           </p>
         </AdditionalInfo>
       </div>
@@ -63,7 +56,7 @@ const Wrapper = styled.section`
 const PrimaryInfo = styled.section`
   margin-bottom: 10rem;
   h1 {
-    font-size: 5rem;
+    font-size: 4rem;
   }
 
   h2 {

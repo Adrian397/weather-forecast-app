@@ -3,34 +3,38 @@ import IconSun from "../icons/icon-sun";
 import IconCloud from "../icons/icon-cloud";
 import IconRain from "../icons/icon-rain";
 import IconSnow from "../icons/icon-snow";
+import { useContext } from "react";
+import Context from "../../store/context";
 
 const WeatherNextDays = () => {
+  const ctx = useContext(Context);
+
   return (
     <Container>
       <div>
         <IconSun />
-        <h3>27°</h3>
-        <p>Today</p>
+        <h3>{ctx.setDailyWeatherForecast(0)}°</h3>
+        <p></p>
       </div>
       <div>
         <IconCloud />
-        <h3>23°</h3>
-        <p>Tue</p>
+        <h3>{ctx.setDailyWeatherForecast(1)}°</h3>
+        <p>nextDay</p>
       </div>
       <div>
         <IconRain />
-        <h3>18°</h3>
-        <p>Wen</p>
+        <h3>{ctx.setDailyWeatherForecast(2)}°</h3>
+        <p>nextDay</p>
       </div>
       <div>
         <IconSnow />
-        <h3>19°</h3>
-        <p>Thurs</p>
+        <h3>{ctx.setDailyWeatherForecast(3)}°</h3>
+        <p>nextDay</p>
       </div>
       <div>
         <IconSun />
-        <h3>23°</h3>
-        <p>Frid</p>
+        <h3>{ctx.setDailyWeatherForecast(4)}°</h3>
+        <p>nextDay</p>
       </div>
     </Container>
   );

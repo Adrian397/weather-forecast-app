@@ -7,7 +7,7 @@ const IconCloud = () => {
       height="44"
       viewBox="0 0 24 24"
       strokeWidth="1.5"
-      stroke="#00abfb"
+      stroke="#9e9e9e"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
