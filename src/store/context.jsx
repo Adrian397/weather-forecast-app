@@ -29,11 +29,11 @@ export const ContextProvider = ({ children }) => {
     const getWeatherData = async () => {
       try {
         const getWeather = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=6dc61734832dac8d077946c3e8d901af&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=&units=metric`
         );
 
         const getForecast = await axios.get(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=6dc61734832dac8d077946c3e8d901af&units=metric`
+          `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=&units=metric`
         );
 
         // cutting list of data from 40 objs to 5 objs
@@ -81,11 +81,11 @@ export const ContextProvider = ({ children }) => {
     .utcOffset(timezoneInMinutes)
     .format("h:mm A");
 
-  const transformedData = moment()
+  const transformedDate = moment()
     .utcOffset(timezoneInMinutes)
     .format("YYYY-MM-DD");
 
-  const transformedDay = moment(transformedData).format("dddd");
+  const transformedDay = moment(transformedDate).format("dddd");
 
   // wind degrees conversion
   let compassSector = [
