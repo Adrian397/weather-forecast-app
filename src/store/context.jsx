@@ -1,6 +1,6 @@
-import axios from "axios";
 import { createContext, useEffect, useState, useRef } from "react";
 import moment from "moment-timezone";
+import { apiService } from "../services/api/api.service";
 
 const Context = createContext({
   weather: {},
@@ -40,9 +40,7 @@ export const ContextProvider = ({ children }) => {
         ////////////////////////////////////////////////////
         // getting current data for displayed location    //
         ////////////////////////////////////////////////////
-        const getWeather = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=&units=metric`
-        );
+        const getWeather = await apiService.getWeather(location);
 
         const currentWeather = getWeather.data.main;
         const currentPlace = getWeather.data.name;
@@ -57,9 +55,7 @@ export const ContextProvider = ({ children }) => {
         ////////////////////////////////////////////////////////////////////////////////
         // getting 5 days, (every 3 hours updating) data ahead for displayed location //
         ////////////////////////////////////////////////////////////////////////////////
-        const getForecast = await axios.get(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=&units=metric`
-        );
+        const getForecast = await apiService.getForecast(location);
 
         // cutting list of data from 40 objs to 5 objs
         let fiveDaysForecast = [];
@@ -69,74 +65,47 @@ export const ContextProvider = ({ children }) => {
           fiveDaysForecast.push(getForecast.data.list[i]);
         }
 
-        // console.log(fiveDaysForecast);
-
         setForecast(fiveDaysForecast);
 
-        //////////////////////////////////////////////////////////////////////////////
-        // getting historic 5 days ago data for displayed location                  //
-        // historic data must be called with one by one api call as a requirement   //
-        //////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        // getting historic 5 days ago data for displayed location                        //
+        // historic data must be called with one by one api call as an api's requirement  //
+        ////////////////////////////////////////////////////////////////////////////////////
 
-        // conversion from location to coordinates
-        const getCoordinatesByLocation = await axios.get(
-          `http://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=
-          `
-        );
-
-        const getLat = getCoordinatesByLocation.data[0].lat;
+        // getting coordinates to use it with historic api
+        const getLat = getWeather.data.coord.lat;
         setLat(getLat);
 
-        const getLon = getCoordinatesByLocation.data[0].lon;
+        const getLon = getWeather.data.coord.lon;
         setLon(getLon);
 
-        // each previous day converted to UTC
-        const lastDay = moment().subtract(1, "days");
-        const lastDayToUnix = moment(lastDay).unix();
+        const getDayTempByDate = (dayValue) => {
+          const day = moment().subtract(dayValue, "days");
+          const dayToUnix = moment(day).unix();
+          return apiService.getTemp({ lat, lon }, dayToUnix);
+        };
 
-        const twoDaysAgo = moment().subtract(2, "days");
-        const twoDaysAgoToUnix = moment(twoDaysAgo).unix();
+        const [
+          getLastDayTemp,
+          get2DaysAgoTemp,
+          get3DaysAgoTemp,
+          get4DaysAgoTemp,
+          get5DaysAgoTemp,
+        ] = await Promise.all([
+          getDayTempByDate(1),
+          getDayTempByDate(2),
+          getDayTempByDate(3),
+          getDayTempByDate(4),
+          getDayTempByDate(5),
+        ]);
 
-        const threeDaysAgo = moment().subtract(3, "days");
-        const threeDaysAgoToUnix = moment(threeDaysAgo).unix();
-
-        const fourDaysAgo = moment().subtract(4, "days");
-        const fourDaysAgoToUnix = moment(fourDaysAgo).unix();
-
-        const fiveDaysAgo = moment().subtract(5, "days");
-        const fiveDaysAgoToUnix = moment(fiveDaysAgo).unix();
-
-        // console.log(twoDaysAgo);
-        // console.log(twoDaysAgoToUnix);
-
-        const getLastDayTemp = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${lastDayToUnix}&appid=&units=metric`
-        );
-
-        const get2DaysAgoTemp = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${twoDaysAgoToUnix}&appid=&units=metric`
-        );
-
-        const get3DaysAgoTemp = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${threeDaysAgoToUnix}&appid=&units=metric`
-        );
-
-        const get4DaysAgoTemp = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${fourDaysAgoToUnix}&appid=&units=metric`
-        );
-
-        const get5DaysAgoTemp = await axios.get(
-          `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${fiveDaysAgoToUnix}&appid=&units=metric`
-        );
-
-        const getLastFiveDaysTemp = [];
-        getLastFiveDaysTemp.push(
+        const getLastFiveDaysTemp = [
           get5DaysAgoTemp.data.current.temp,
           get4DaysAgoTemp.data.current.temp,
           get3DaysAgoTemp.data.current.temp,
           get2DaysAgoTemp.data.current.temp,
-          getLastDayTemp.data.current.temp
-        );
+          getLastDayTemp.data.current.temp,
+        ];
 
         setHistoricTemp(getLastFiveDaysTemp);
       } catch (err) {
@@ -146,11 +115,7 @@ export const ContextProvider = ({ children }) => {
     };
 
     getWeatherData();
-  }, [location, lat, lon]);
-
-  // if (historicTemp.length > 0) {
-  //   console.log(historicTemp);
-  // }
+  }, [location]);
 
   // time conversion using moment.js
   const timezoneInMinutes = timezone / 60;
@@ -186,14 +151,12 @@ export const ContextProvider = ({ children }) => {
   let windDirection;
   if (Object.keys(wind).length) {
     windDirection = compassSector[(wind.deg / 22.5).toFixed(0)];
-    // console.log(windDirection);
   }
 
   // wind speed conversion
   let windSpeed;
   if (Object.keys(wind).length) {
     windSpeed = ((wind.speed * (60 * 60)) / 1000).toFixed(0);
-    // console.log(windSpeed);
   }
 
   // daily weather forecast
@@ -202,10 +165,6 @@ export const ContextProvider = ({ children }) => {
       return Math.trunc(forecast[n].main.temp_max);
     }
   };
-
-  // if (forecast.length > 0) {
-  //   console.log(forecast);
-  // }
 
   // setting next days
   const setNextDays = (n) => {
@@ -234,21 +193,18 @@ export const ContextProvider = ({ children }) => {
     setLocation(inputLocation.current.value);
   };
 
-  const lastDay = moment().subtract(1, "days").format("DD-MM-YYYY");
-  const twoDaysAgo = moment().subtract(2, "days").format("DD-MM-YYYY");
-  const threeDaysAgo = moment().subtract(3, "days").format("DD-MM-YYYY");
-  const fourDaysAgo = moment().subtract(4, "days").format("DD-MM-YYYY");
-  const fiveDaysAgo = moment().subtract(4, "days").format("DD-MM-YYYY");
+  // last days chart display
+  const lastDays = (day) => {
+    return moment().subtract(day, "days").format("DD-MM-YYYY");
+  };
 
-  const lastFiveDays = [];
-  lastFiveDays.push(
-    fiveDaysAgo,
-    fourDaysAgo,
-    threeDaysAgo,
-    twoDaysAgo,
-    lastDay
-  );
-
+  const lastFiveDays = [
+    lastDays(5),
+    lastDays(4),
+    lastDays(3),
+    lastDays(2),
+    lastDays(1),
+  ];
   const context = {
     weather,
     place,

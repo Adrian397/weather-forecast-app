@@ -21,6 +21,7 @@ const WeatherNextDays = () => {
         {ctx.setWeatherIcon(1) === "clouds" && <IconCloud />}
         {ctx.setWeatherIcon(1) === "sun" && <IconSun />}
         {ctx.setWeatherIcon(1) === "rain" && <IconRain />}
+
         <h3>{ctx.setDailyTemperature(1)}°</h3>
         <p>{ctx.setNextDays(1)}</p>
       </div>

@@ -43,14 +43,4 @@ const Informations = styled.div`
   width: 50%;
 `;
 
-// const Spinner = styled.div`
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   transform: translate(-50%, -50%);
-//   width: 10rem;
-//   height: 10rem;
-//   background: yellow;
-// `;
-
 export default WeatherContainer;
