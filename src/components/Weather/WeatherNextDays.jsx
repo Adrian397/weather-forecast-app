@@ -2,39 +2,48 @@ import styled from "styled-components";
 import IconSun from "../icons/icon-sun";
 import IconCloud from "../icons/icon-cloud";
 import IconRain from "../icons/icon-rain";
-import IconSnow from "../icons/icon-snow";
+
 import { useContext } from "react";
 import Context from "../../store/context";
 
 const WeatherNextDays = () => {
   const ctx = useContext(Context);
-
   return (
     <Container>
       <div>
-        <IconSun />
-        <h3>{ctx.setDailyWeatherForecast(0)}°</h3>
-        <p></p>
+        {ctx.setWeatherIcon(0) === "clouds" && <IconCloud />}
+        {ctx.setWeatherIcon(0) === "sun" && <IconSun />}
+        {ctx.setWeatherIcon(0) === "rain" && <IconRain />}
+        <h3>{ctx.setDailyTemperature(0)}°</h3>
+        <p>Today</p>
       </div>
       <div>
-        <IconCloud />
-        <h3>{ctx.setDailyWeatherForecast(1)}°</h3>
-        <p>nextDay</p>
+        {ctx.setWeatherIcon(1) === "clouds" && <IconCloud />}
+        {ctx.setWeatherIcon(1) === "sun" && <IconSun />}
+        {ctx.setWeatherIcon(1) === "rain" && <IconRain />}
+        <h3>{ctx.setDailyTemperature(1)}°</h3>
+        <p>{ctx.setNextDays(1)}</p>
       </div>
       <div>
-        <IconRain />
-        <h3>{ctx.setDailyWeatherForecast(2)}°</h3>
-        <p>nextDay</p>
+        {ctx.setWeatherIcon(2) === "clouds" && <IconCloud />}
+        {ctx.setWeatherIcon(2) === "sun" && <IconSun />}
+        {ctx.setWeatherIcon(2) === "rain" && <IconRain />}
+        <h3>{ctx.setDailyTemperature(2)}°</h3>
+        <p>{ctx.setNextDays(2)}</p>
       </div>
       <div>
-        <IconSnow />
-        <h3>{ctx.setDailyWeatherForecast(3)}°</h3>
-        <p>nextDay</p>
+        {ctx.setWeatherIcon(3) === "clouds" && <IconCloud />}
+        {ctx.setWeatherIcon(3) === "sun" && <IconSun />}
+        {ctx.setWeatherIcon(3) === "rain" && <IconRain />}
+        <h3>{ctx.setDailyTemperature(3)}°</h3>
+        <p>{ctx.setNextDays(3)}</p>
       </div>
       <div>
-        <IconSun />
-        <h3>{ctx.setDailyWeatherForecast(4)}°</h3>
-        <p>nextDay</p>
+        {ctx.setWeatherIcon(4) === "clouds" && <IconCloud />}
+        {ctx.setWeatherIcon(4) === "sun" && <IconSun />}
+        {ctx.setWeatherIcon(4) === "rain" && <IconRain />}
+        <h3>{ctx.setDailyTemperature(4)}°</h3>
+        <p>{ctx.setNextDays(4)}</p>
       </div>
     </Container>
   );
@@ -60,6 +69,10 @@ const Container = styled.section`
       rgba(255, 255, 255, 0.2),
       rgba(255, 255, 255, 0.3)
     );
+  }
+
+  & > div p {
+    font-size: 0.8rem;
   }
 `;
 

@@ -16,7 +16,7 @@ const WeatherDisplay = () => {
           <h1>{current.place},</h1>
           <h2>{Math.trunc(current.weather.temp)}°</h2>
           <p>
-            {current.transformedDay}, {current.transformedTime}
+            {current.convertedDay}, {current.convertedTime}
           </p>
         </PrimaryInfo>
         <AdditionalInfo>
