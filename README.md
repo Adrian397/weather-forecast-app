@@ -1,5 +1,3 @@
-### How to get this app started?
+### Weather Forecast App made with React.js & Chart.js
 
-Firstly install all needed dependencies by typing "npm install" into command line.
-
-Then you have to type "npm start" and the app starts.
+Live demo: https://weather-forecast-app-1297.netlify.app
